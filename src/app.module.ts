@@ -30,8 +30,11 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
   },
 });
 
+import { PlanSellersModule } from './plan-sellers/plan-sellers.module';
+
 @Module({
   imports: [
+    PlanSellersModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [
