@@ -1,7 +1,9 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreatePlanSeller1761364358174 implements MigrationInterface {
-  name = 'CreatePlanSeller1761364358174';
+export class CreateSubscriptionSeller1761366409026
+  implements MigrationInterface
+{
+  name = 'CreateSubscriptionSeller1761366409026';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -26,13 +28,16 @@ export class CreatePlanSeller1761364358174 implements MigrationInterface {
       `CREATE INDEX "IDX_f0e1b4ecdca13b177e2e3a0613" ON "user" ("lastName") `,
     );
     await queryRunner.query(
+      `CREATE TABLE "plan_seller" ("is_active" boolean NOT NULL, "commission_rate" integer NOT NULL, "priority_support" boolean NOT NULL, "price_yearly" integer, "price_monthly" integer NOT NULL, "slug" character varying NOT NULL, "name" character varying NOT NULL, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_2da8716aefdc7d7e2464954854a" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "subscription_seller" ("transaction_id" character varying, "payment_method" character varying NOT NULL, "status" character varying NOT NULL, "end_date" TIMESTAMP, "start_date" TIMESTAMP NOT NULL, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "planId" uuid NOT NULL, "userId" integer NOT NULL, CONSTRAINT "PK_b9fbfac0068fdb103cec9ba4895" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(
       `CREATE TABLE "session" ("id" SERIAL NOT NULL, "hash" character varying NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "userId" integer, CONSTRAINT "PK_f55da76ac1c3ac420f444d2ff11" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE INDEX "IDX_3d2f174ef04fb312fdebd0ddc5" ON "session" ("userId") `,
-    );
-    await queryRunner.query(
-      `CREATE TABLE "plan_seller" ("is_active" boolean NOT NULL, "commission_rate" integer NOT NULL, "priority_support" boolean NOT NULL, "price_yearly" integer, "price_monthly" integer NOT NULL, "slug" character varying NOT NULL, "name" character varying NOT NULL, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_2da8716aefdc7d7e2464954854a" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `ALTER TABLE "user" ADD CONSTRAINT "FK_75e2be4ce11d447ef43be0e374f" FOREIGN KEY ("photoId") REFERENCES "file"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
@@ -44,6 +49,12 @@ export class CreatePlanSeller1761364358174 implements MigrationInterface {
       `ALTER TABLE "user" ADD CONSTRAINT "FK_dc18daa696860586ba4667a9d31" FOREIGN KEY ("statusId") REFERENCES "status"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
+      `ALTER TABLE "subscription_seller" ADD CONSTRAINT "FK_da36a8fbe642fc5cca45c1b97bf" FOREIGN KEY ("planId") REFERENCES "plan_seller"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "subscription_seller" ADD CONSTRAINT "FK_ca003c948f52528213309dec1b0" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "session" ADD CONSTRAINT "FK_3d2f174ef04fb312fdebd0ddc53" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
   }
@@ -51,6 +62,12 @@ export class CreatePlanSeller1761364358174 implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `ALTER TABLE "session" DROP CONSTRAINT "FK_3d2f174ef04fb312fdebd0ddc53"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "subscription_seller" DROP CONSTRAINT "FK_ca003c948f52528213309dec1b0"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "subscription_seller" DROP CONSTRAINT "FK_da36a8fbe642fc5cca45c1b97bf"`,
     );
     await queryRunner.query(
       `ALTER TABLE "user" DROP CONSTRAINT "FK_dc18daa696860586ba4667a9d31"`,
@@ -61,11 +78,12 @@ export class CreatePlanSeller1761364358174 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "user" DROP CONSTRAINT "FK_75e2be4ce11d447ef43be0e374f"`,
     );
-    await queryRunner.query(`DROP TABLE "plan_seller"`);
     await queryRunner.query(
       `DROP INDEX "public"."IDX_3d2f174ef04fb312fdebd0ddc5"`,
     );
     await queryRunner.query(`DROP TABLE "session"`);
+    await queryRunner.query(`DROP TABLE "subscription_seller"`);
+    await queryRunner.query(`DROP TABLE "plan_seller"`);
     await queryRunner.query(
       `DROP INDEX "public"."IDX_f0e1b4ecdca13b177e2e3a0613"`,
     );
