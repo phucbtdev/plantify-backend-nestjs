@@ -33,8 +33,14 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 import { PlanSellersModule } from './plan-sellers/plan-sellers.module';
 import { SubscriptionSellersModule } from './subscription-sellers/subscription-sellers.module';
 
+import { CategoriesModule } from './categories/categories.module';
+
+import { CategoriesModule } from './categories/categories.module';
+
 @Module({
   imports: [
+    CategoriesModule,
+    CategoriesModule,
     PlanSellersModule,
     SubscriptionSellersModule,
     PlanSellersModule,

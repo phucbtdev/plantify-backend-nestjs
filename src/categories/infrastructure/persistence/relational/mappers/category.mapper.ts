@@ -1,0 +1,37 @@
+import { Category } from '../../../../domain/category';
+
+import { CategoryEntity } from '../entities/category.entity';
+
+export class CategoryMapper {
+  static toDomain(raw: CategoryEntity): Category {
+    const domainEntity = new Category();
+    domainEntity.parent_id = raw.parent_id;
+
+    domainEntity.slug = raw.slug;
+
+    domainEntity.name = raw.name;
+
+    domainEntity.id = raw.id;
+    domainEntity.createdAt = raw.createdAt;
+    domainEntity.updatedAt = raw.updatedAt;
+
+    return domainEntity;
+  }
+
+  static toPersistence(domainEntity: Category): CategoryEntity {
+    const persistenceEntity = new CategoryEntity();
+    persistenceEntity.parent_id = domainEntity.parent_id;
+
+    persistenceEntity.slug = domainEntity.slug;
+
+    persistenceEntity.name = domainEntity.name;
+
+    if (domainEntity.id) {
+      persistenceEntity.id = domainEntity.id;
+    }
+    persistenceEntity.createdAt = domainEntity.createdAt;
+    persistenceEntity.updatedAt = domainEntity.updatedAt;
+
+    return persistenceEntity;
+  }
+}

@@ -227,6 +227,40 @@ export class AuthService {
     });
   }
 
+  async registerSeller(dto: AuthRegisterLoginDto): Promise<void> {
+    const user = await this.usersService.create({
+      ...dto,
+      email: dto.email,
+      role: {
+        id: RoleEnum.seller,
+      },
+      status: {
+        id: StatusEnum.inactive,
+      },
+    });
+
+    const hash = await this.jwtService.signAsync(
+      {
+        confirmEmailUserId: user.id,
+      },
+      {
+        secret: this.configService.getOrThrow('auth.confirmEmailSecret', {
+          infer: true,
+        }),
+        expiresIn: this.configService.getOrThrow('auth.confirmEmailExpires', {
+          infer: true,
+        }),
+      },
+    );
+
+    await this.mailService.userSignUp({
+      to: dto.email,
+      data: {
+        hash,
+      },
+    });
+  }
+
   async confirmEmail(hash: string): Promise<void> {
     let userId: User['id'];
 
