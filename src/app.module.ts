@@ -35,12 +35,13 @@ import { SubscriptionSellersModule } from './subscription-sellers/subscription-s
 
 import { CategoriesModule } from './categories/categories.module';
 
-import { CategoriesModule } from './categories/categories.module';
-
 import { SellersModule } from './sellers/sellers.module';
+
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
+    ProductsModule,
     SellersModule,
     CategoriesModule,
     CategoriesModule,
