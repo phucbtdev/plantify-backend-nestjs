@@ -37,8 +37,11 @@ import { CategoriesModule } from './categories/categories.module';
 
 import { CategoriesModule } from './categories/categories.module';
 
+import { SellersModule } from './sellers/sellers.module';
+
 @Module({
   imports: [
+    SellersModule,
     CategoriesModule,
     CategoriesModule,
     PlanSellersModule,
