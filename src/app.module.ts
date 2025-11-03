@@ -39,8 +39,11 @@ import { SellersModule } from './sellers/sellers.module';
 
 import { ProductsModule } from './products/products.module';
 
+import { CartsModule } from './carts/carts.module';
+
 @Module({
   imports: [
+    CartsModule,
     ProductsModule,
     SellersModule,
     CategoriesModule,
