@@ -16,6 +16,7 @@ import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 import { CartItemRepository } from './infrastructure/persistence/cart-item.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { CartItem } from './domain/cart-item';
+import { Cart } from '../carts/domain/cart';
 
 @Injectable()
 export class CartItemsService {
